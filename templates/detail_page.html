@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Detail page{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-md-12 py-5">
+            <h1>{{ product.name }}</h1>
+            <div class="row py-5">
+                <div class="col-md-4">
+                    <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+                </div>
+                <div class="col-md-4 card">
+                    <h3>{{ product.description }}</h3>
+                </div>
+                <div class="col-md-4 card">
+                    <h3>{{ product.price }}</h3>
+                    <p>Standart yetkazib berish
+                        Manzilga qarab 4 soatdan 3 kungacha yetkazib beriladi</p>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'orders:create_order' product.slug %}" class="btn btn-success">Buyurtma
+                            berish</a>
+                    {% else %}
+                        <h3>Buyurtma berish uchun ro'yxatdan o'ting</h3>
+                        <a href="{% url 'users:register' %}" class="btn btn-primary">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                {% if request.user.is_authenticated %}
+                    <div class="col-md-6">
+                        <form class="form-control" action="" method="post">
+                            {% csrf_token %}
+                            <textarea name="review" id="review" cols="52" rows="3"></textarea>
+                            <br>
+                            <button class="btn btn-primary" type="submit">Send Review</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="col-md-4">
+                        <p>Siz review qoldirish uchun ro'yxatdan o'tgan bo'lishingiz kerak</p>
+                        <a href="{% url 'users:login' %}" class="btn btn-success">Login</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group list-group-flush">
+                        {% for review in product_reviews %}
+                            <li class="list-group-item">
+                                <h5>{{ review.user.username }} | {{ review.created_at }}
+                                    <a class="btn btn-warning"
+                                       href="{% url 'products:edit-reviews' product.slug review.id %}">edit</a>
+                                    <a class="btn btn-danger"
+                                       href="{% url 'products:delete-reviews' product.slug review.id %}">del</a>
+                                </h5>
+                                <p>{{ review.review }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}

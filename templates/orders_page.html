@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for order in orders %}
+    <h4>{{ order.product.name }}</h4>
+    <h5>{{ order.user.username }}</h5><br>
+
+<hr>
+{% endfor %}
+
+{% endblock %}
